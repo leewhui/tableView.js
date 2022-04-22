@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/leewhui/tableView.js/issues"
   },
-  "homepage": "https://github.com/leewhui/tableView.js#readme"
+  "homepage": "https://github.com/leewhui/tableView.js#readme",
+  "dependencies": {
+    "eventemitter": "^0.3.3",
+    "konva": "^8.3.5"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  }
 }
