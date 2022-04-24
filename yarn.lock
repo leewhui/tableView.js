@@ -12,6 +12,11 @@ konva@^8.3.5:
   resolved "https://mirrors.huaweicloud.com/repository/npm/konva/-/konva-8.3.5.tgz#017799db93f70ef6437eaa8e7776a4b32648344b"
   integrity sha512-RjaZN8PwZN3n/AlqLmtPNozLRXd6pPo11UawTJpvuOAKEkSQSXI1EHntDRIPnrrJ/j4gU0VmPzWs7/ZgLZnAPQ==
 
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+
 typescript@^4.6.3:
   version "4.6.3"
   resolved "https://mirrors.huaweicloud.com/repository/npm/typescript/-/typescript-4.6.3.tgz#eefeafa6afdd31d725584c67a0eaba80f6fc6c6c"

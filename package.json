@@ -18,7 +18,8 @@
   "homepage": "https://github.com/leewhui/tableView.js#readme",
   "dependencies": {
     "eventemitter": "^0.3.3",
-    "konva": "^8.3.5"
+    "konva": "^8.3.5",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "typescript": "^4.6.3"
