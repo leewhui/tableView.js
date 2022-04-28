@@ -22,9 +22,37 @@ export interface TableInterface {
   columns: ColumnInterface[];
 }
 
+export type setStateType = (data: DataInterface) => void;
 export interface ComponentInterface {
-  setState: (data: DataInterface) => void;
-  prepare: (data: DataInterface, wrapper: HTMLDivElement) => void;
+  setState: setStateType;
+  prepare: () => void;
   render: Function;
 }
 
+export function createDefaultConfig() {
+  const columns: ColumnInterface[] = [];
+  for (let i = 0; i < 3; i++) {
+    const data: DataInterface[] = [];
+    for (let j = 0; j < 3; j++) {
+      data.push({
+        content: '',
+        index: [i, j]
+      })
+    }
+
+    columns.push({
+      type: 'text',
+      index: i,
+      width: 180,
+      data
+    })
+  }
+  return columns;
+}
+
+export const defaultConfig = {
+  height: 30,
+  head: { x: 100, y: 100 },
+  tail: { x: 0, y: 0 },
+  columns: createDefaultConfig(),
+}

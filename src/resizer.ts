@@ -8,11 +8,13 @@ export class Resizer {
   mouseDown: MouseEvent;
   stage: Konva.Stage;
   start: number;
+  enable: boolean = true;
 
   constructor(stage: Konva.Stage, resizerGroup: Konva.Group, resize: Function) {
     this.resizerGroup = resizerGroup;
 
     this.resizerGroup.on('mouseover', (e) => {
+      if (!this.enable) return;
       if (e.target instanceof Konva.Rect) {
         document.body.style.cursor = 'col-resize'
         e.target.fill('#3370ff');
@@ -27,6 +29,7 @@ export class Resizer {
     })
 
     this.resizerGroup.on('mousedown', (e: any) => {
+      if (!this.enable) return;
       if (e.target instanceof Konva.Rect) {
         this.resizer = e.target;
         this.start = this.resizer.getAttr('x');
@@ -40,7 +43,6 @@ export class Resizer {
         const column = this.resizer['column_mapping'];
         const diff = point.x - this.start;
         resize(column, diff);
-
         this.resizer = undefined;
         this.mouseDown = undefined;
       }
@@ -53,5 +55,9 @@ export class Resizer {
         this.resizer.x(diff + this.start);
       }
     })
+  }
+
+  setEnable(flag: boolean) {
+    this.enable = flag;
   }
 }

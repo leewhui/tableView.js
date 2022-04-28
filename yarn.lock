@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+eventemitter3@^4.0.7:
+  version "4.0.7"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
+  integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
 eventemitter@^0.3.3:
   version "0.3.3"
   resolved "https://mirrors.huaweicloud.com/repository/npm/eventemitter/-/eventemitter-0.3.3.tgz#d3a0a97edf2d2890b6aa8a703e93a43c03ad8e45"
