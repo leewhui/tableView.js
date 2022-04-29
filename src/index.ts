@@ -1,23 +1,23 @@
 import Konva from 'konva';
 import { Resizer } from './resizer';
 import { Selector } from './selection';
-import { ColumnInterface, ComponentInterface, DataInterface, defaultConfig, TableInterface, Vector2 } from './type';
+import { ColumnInterface, ComponentInterface, DataInterface, defaultConfig, TableInterface } from './type';
 import EventEmitter from 'eventemitter3';
-import { createWrapper } from './wrapper';
+import { Wrapper } from './wrapper';
 import { cloneDeep } from 'lodash';
 import { TextComponent } from './components/textComponent';
+import { LinkComponent } from './components/linkComponent';
 
 export class TableView {
   container: HTMLDivElement;
   stage: Konva.Stage;
   layer: Konva.Layer;
 
-  cellGroup: Konva.Group = new Konva.Group({ name: 'cellGroup' });
-  colunmGroup: Konva.Group = new Konva.Group();
+  colunmGroup: Konva.Group = new Konva.Group({ name: 'column group' });
   resizerGroup: Konva.Group = new Konva.Group({ name: 'resizer group' });
 
   config: TableInterface;
-  wrapper: HTMLDivElement;
+  wrapperManager: Wrapper;
   data_cell = new Konva.Rect({
     fill: 'white',
     name: 'data_cell',
@@ -38,30 +38,30 @@ export class TableView {
     });
 
     this.layer = new Konva.Layer();
-    this.wrapper = createWrapper();
-    document.body.appendChild(this.wrapper)
+
+    // 鼠标点击单元格，dom容器
+    this.wrapperManager = new Wrapper(this.container);
+    document.body.appendChild(this.wrapperManager.wrapper);
 
     this.stage.add(this.layer);
-    this.selector = new Selector(this.colunmGroup, this.emitter, this.container);
+    this.selector = new Selector(this.stage, this.emitter, this.container, this.colunmGroup);
     this.resizer = new Resizer(this.stage, this.resizerGroup, this.resize);
 
-    this.emitter.on('onselect', this.selectCell)
+    this.emitter.on('onselect', this.onselectCell)
+
     this.emitter.on('blur', () => {
-      this.wrapper.innerHTML = '';
-      this.wrapper.style.width = '0px';
-      this.wrapper.style.height = '0px';
+      this.wrapperManager.resetWrapper();
       this.resizer.setEnable(true);
     });
-    this.apply(new TextComponent(this.setState, this.emitter));
+
+    this.apply(new TextComponent(this.setState, this.emitter), new LinkComponent(this.setState, this.emitter));
     this.draw();
   }
 
   setState = (data: DataInterface) => {
     this.config.columns[data.index[0]].data[data.index[1]] = data;
     this.resizer.setEnable(false);
-    this.wrapper.innerHTML = '';
-    this.wrapper.style.width = '0px';
-    this.wrapper.style.height = '0px';
+    this.wrapperManager.resetWrapper();
     this.draw();
     this.resizer.setEnable(true);
   }
@@ -70,6 +70,8 @@ export class TableView {
     component.forEach(c => c.prepare())
   }
 
+
+  // 开始绘制表格
   draw() {
     this.layer.removeChildren();
     this.colunmGroup.removeChildren();
@@ -81,6 +83,8 @@ export class TableView {
     this.drawResizerLine();
   }
 
+
+  // 绘制column
   drawColumn(column: ColumnInterface) {
     const cellGroup = new Konva.Group(
       { name: 'column_' + column.index }
@@ -96,9 +100,10 @@ export class TableView {
     return cellGroup;
   }
 
+  // 绘制单元格
   drawCell(column: ColumnInterface, data: DataInterface, title: Konva.Group) {
     const y = this.config.head.y + data.index[1] * this.config.height + title.height();
-    const cell = this.setCell(column, y);
+    const cell = this.createCell(column, y);
     cell.name('cell_group');
     cell['data'] = cloneDeep(data);
     this.emitter.emit(`render_${column.type}`, cell, data)
@@ -106,10 +111,10 @@ export class TableView {
   }
 
   drawTitle(column: ColumnInterface) {
-    return this.setCell(column, this.config.head.y);
+    return this.createCell(column, this.config.head.y);
   }
 
-  private setCell(column: ColumnInterface, y: number) {
+  private createCell(column: ColumnInterface, y: number) {
     const group = new Konva.Group();
     const cell = this.data_cell.clone();
     cell.width(column.width);
@@ -150,21 +155,11 @@ export class TableView {
     this.draw();
   }
 
-  selectCell = (rect: Konva.Group) => {
+  onselectCell = (rect: Konva.Node) => {
     if (rect.getAttr('name') !== 'cell_group') return;
     this.resizer.setEnable(false);
-    this.wrapper.innerHTML = '';
-    const offset = { x: rect.x(), y: rect.y() }
-    const width = rect.getAttr('width');
-    const height = rect.getAttr('height');
-    const left = this.container.offsetLeft;
-    const right = this.container.offsetTop;
-    this.wrapper.style.left = offset.x + left + 'px';
-    this.wrapper.style.top = offset.y + right + 'px';
-    this.wrapper.style.width = `${width}px`;
-    this.wrapper.style.height = `${height}px`;
-
-    this.emitter.emit(`focus_${rect.parent['column'].type}`, this.wrapper, rect['data']);
+    this.wrapperManager.drawWrapperBaseOnCell(rect);
+    this.emitter.emit(`focus_${rect.parent['column'].type}`, this.wrapperManager.wrapper, rect['data']);
   }
 
   private getColumnPosition(index: number) {

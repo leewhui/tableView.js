@@ -1,5 +1,4 @@
 import Konva from "konva";
-import { Vector2d } from "konva/lib/types";
 
 export class Resizer {
   resizerGroup: Konva.Group;

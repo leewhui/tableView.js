@@ -1,7 +1,6 @@
-export type Vector2 = {
-  x: number;
-  y: number;
-}
+import EventEmitter from "eventemitter3";
+import Konva from "konva";
+import { Vector2d } from "konva/lib/types";
 
 export interface DataInterface {
   content: string;
@@ -17,16 +16,17 @@ export interface ColumnInterface {
 
 export interface TableInterface {
   height: number;
-  head: Vector2;
-  tail: Vector2;
+  head: Vector2d;
+  tail: Vector2d;
   columns: ColumnInterface[];
 }
 
 export type setStateType = (data: DataInterface) => void;
 export interface ComponentInterface {
+  emitter: EventEmitter;
   setState: setStateType;
   prepare: () => void;
-  render: Function;
+  render: (cell: Konva.Group, data: DataInterface) => void;
 }
 
 export function createDefaultConfig() {
@@ -40,12 +40,21 @@ export function createDefaultConfig() {
       })
     }
 
-    columns.push({
-      type: 'text',
-      index: i,
-      width: 180,
-      data
-    })
+    if (i === 1) {
+      columns.push({
+        type: 'text',
+        index: i,
+        width: 180,
+        data
+      })
+    } else {
+      columns.push({
+        type: 'link',
+        index: i,
+        width: 180,
+        data
+      })
+    }
   }
   return columns;
 }
