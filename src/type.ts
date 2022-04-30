@@ -9,6 +9,7 @@ export interface DataInterface {
 
 export interface ColumnInterface {
   type: string;
+  title: string;
   index: number;
   width: number;
   data: DataInterface[];
@@ -43,6 +44,7 @@ export function createDefaultConfig() {
     if (i === 1) {
       columns.push({
         type: 'text',
+        title: '🔥 多行文本',
         index: i,
         width: 180,
         data
@@ -50,6 +52,7 @@ export function createDefaultConfig() {
     } else {
       columns.push({
         type: 'link',
+        title: '🍉 链接',
         index: i,
         width: 180,
         data

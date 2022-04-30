@@ -3,7 +3,7 @@ import { Resizer } from './resizer';
 import { Selector } from './selection';
 import { ColumnInterface, ComponentInterface, DataInterface, defaultConfig, TableInterface } from './type';
 import EventEmitter from 'eventemitter3';
-import { Wrapper } from './wrapper';
+import { creatText, Wrapper } from './wrapper';
 import { cloneDeep } from 'lodash';
 import { TextComponent } from './components/textComponent';
 import { LinkComponent } from './components/linkComponent';
@@ -111,7 +111,24 @@ export class TableView {
   }
 
   drawTitle(column: ColumnInterface) {
-    return this.createCell(column, this.config.head.y);
+    const cell = this.createCell(column, this.config.head.y);
+    const rect = cell.find('rect');
+    console.log(rect);
+
+    const text = creatText(column.title, cell.width() - 8);
+    text.x(8);
+    cell.add(text);
+
+    cell.on('mouseover', () => {
+      const rect = cell.find('Rect') as Konva.Rect[];
+      rect[0].fill('#e8e9e9');
+    })
+
+    cell.on('mouseleave', () => {
+      const rect = cell.find('Rect') as Konva.Rect[];
+      rect[0].fill('transparent');
+    })
+    return cell;
   }
 
   private createCell(column: ColumnInterface, y: number) {

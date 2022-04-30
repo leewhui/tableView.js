@@ -50,13 +50,14 @@ export function editableContainer(): HTMLDivElement {
 
 export function creatText(content: string, width: number): Konva.Text {
   const text = new Konva.Text({
-    fontSize: 16,
-    fontFamily: 'Times',
+    fontSize: 14,
+    fontFamily: 'LarkHackSafariFont,LarkEmojiFont,LarkChineseQuote,-apple-system,BlinkMacSystemFont,Helvetica Neue,Tahoma,PingFang SC,Microsoft Yahei,Arial,Hiragino Sans GB,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji',
     text: content,
     offsetY: -16 / 2,
-    width: width,
     wrap: "none",
     ellipsis: true,
   });
+  width = Math.min(width, text.getClientRect().width);
+  text.width(width);
   return text;
 }

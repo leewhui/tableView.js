@@ -2,7 +2,7 @@ import EventEmitter from "eventemitter3";
 import Konva from "konva";
 import { Group } from "konva/lib/Group";
 import { ComponentInterface, DataInterface, setStateType } from "../type";
-import { editableContainer } from "../wrapper";
+import { creatText, editableContainer } from "../wrapper";
 
 export class LinkComponent implements ComponentInterface {
   emitter: EventEmitter;
@@ -36,17 +36,8 @@ export class LinkComponent implements ComponentInterface {
   }
 
   render = (cell: Group, data: DataInterface) => {
-    const text = new Konva.Text({
-      fontSize: 16,
-      fontFamily: 'Times',
-      text: data.content,
-      offsetY: -16 / 2,
-      maxWidth: cell.width() - 8,
-      wrap: "none",
-      ellipsis: true,
-      fill: '#437bff',
-    });
-
+    const text = creatText(data.content, cell.width() - 8);
+    text.fill('#437bff');
     text.on('mouseover', () => {
       text.textDecoration('underline');
     })
